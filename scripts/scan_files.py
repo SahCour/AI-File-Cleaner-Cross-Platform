@@ -43,7 +43,7 @@ def scan_directory(start_path):
                 files_list.append({
                     "id": str(len(files_list) + 1),
                     "filename": file,
-                    "path": file_path,
+                    "path": file_path.replace('\\', '/'),
                     "size_bytes": stat.st_size,
                     "modified_at": stat.st_mtime,
                     "extension": os.path.splitext(file)[1].lower(),
