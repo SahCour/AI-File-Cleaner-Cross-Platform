@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Mac
+.DS_Store
+
+# App Data (Do not commit user's personal file lists)
+files_to_process.json
+export_tasks.json
+export_tasks.json.done
+folder_tree.json
+folder_tree.md
+move_log.json
+destinations.json
+.env
+
+# Node (if used later)
+node_modules/

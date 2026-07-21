@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивная Очистка Mac</title>
+    <link rel="stylesheet" href="styles.css?v=5">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>AI Mac Cleaner</h1>
+            <p>Sort files into destination folders based on AI analysis</p>
+            <div class="stats">
+                <span id="stats-total">0 files</span>
+            </div>
+        </header>
+        
+        <main>
+            <!-- Progress Bar (Sticky) -->
+            <div style="position: sticky; top: 0; z-index: 1000; background: var(--bg-color); padding: 1rem 0; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div>
+                        <span id="progress-text" style="color: var(--text-main); font-weight: bold; font-size: 1.1rem; margin-right: 10px;">0%</span>
+                        <span id="stats-text" style="color: var(--text-muted); font-size: 0.9rem;">0 / 0 files organized</span>
+                    </div>
+                    <div>
+                        <button id="btn-manage-folders" class="action-btn" style="margin-right: 1rem; padding: 0.5rem 1rem;">⚙️ Manage Folders</button>
+                        <button id="btn-reset" class="action-btn" style="background: rgba(255, 82, 82, 0.1); color: #ff5252; margin-right: 1rem; border: 1px solid rgba(255, 82, 82, 0.3); padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-family: Inter, sans-serif;">↺ Reset Progress</button>
+                        <button id="btn-export" class="primary-btn">Export</button>
+                    </div>
+                </div>
+                <div class="progress-container" style="width: 100%; background: var(--card-bg); border-radius: 8px; height: 10px; overflow: hidden; border: 1px solid var(--border); padding: 0; margin-bottom: 0; box-shadow: none;">
+                    <div id="progress-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #448aff, #69f0ae); transition: width 0.3s ease;"></div>
+                </div>
+            </div>
+
+            <!-- Переключатель режимов и поиск -->
+            <div id="view-mode-toggle" style="display: flex; gap: 10px; margin-bottom: 1rem; align-items: center; padding: 0 10px; justify-content: space-between;">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <span style="color: var(--text-muted); font-size: 0.9rem; font-weight: 500;">View Mode:</span>
+                    <button class="action-btn active" id="btn-mode-source" style="padding: 0.4rem 0.8rem; border-color: #69f0ae; color: #000; background-color: #69f0ae; font-weight: bold;">📁 Stage 1: Sort (By Source)</button>
+                    <button class="action-btn" id="btn-mode-dest" style="padding: 0.4rem 0.8rem;">🎯 Stage 2: Review (By Destination)</button>
+                </div>
+                <div class="search-container" style="flex: 1; max-width: 300px;">
+                    <input type="text" id="search-input" placeholder="Search files or paths..." style="width: 100%; padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-family: Inter, sans-serif; font-size: 0.9rem;">
+                </div>
+            </div>
+
+            <!-- Панель фильтров по группам -->
+            <div id="filter-bar" class="filter-bar">
+                <button class="filter-btn active" data-group="ALL">All Folders</button>
+                <!-- Сюда JS добавит кнопки для каждой группы -->
+            </div>
+            
+            <div id="toast" class="toast">Progress saved</div>
+    
+    <!-- Popover for Directory Selection -->
+    <div id="dir-modal" class="modal">
+        <h3>Select Folder Level to Move</h3>
+        <p style="margin-bottom: 1rem; color: #a0a0b0; font-size: 0.9rem;">Target: <strong id="dir-modal-target" style="color: #69f0ae;"></strong></p>
+        <div id="dir-modal-options"></div>
+        <button id="dir-modal-cancel" class="action-btn" style="margin-top: 1rem; width: 100%;">Cancel</button>
+    </div>
+    
+    <!-- Modal for Manage Folders -->
+    <div id="manage-folders-modal" class="modal fixed-modal">
+        <div class="modal-content">
+            <h3>⚙️ Manage Folders</h3>
+            <p style="margin-bottom: 1rem; color: #a0a0b0; font-size: 0.9rem;">Delete unused folders to keep your UI clean.</p>
+            <div id="manage-folders-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 1rem;">
+                <!-- Folder items generated via JS -->
+            </div>
+            <button id="btn-close-manage" class="primary-btn" style="width: 100%;">Done</button>
+        </div>
+    </div>
+            
+            <div id="file-list" class="file-list">
+                <!-- Группы файлов генерируются в JS -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Плавающая панель массовых действий -->
+    <div id="bulk-bar" class="bulk-bar hidden">
+        <div class="bulk-info">
+            <span id="bulk-count">0</span> files selected
+        </div>
+        <div class="bulk-actions">
+            <button id="btn-cancel-bulk" class="filter-btn" style="margin-right: 1rem; border-color: rgba(255,255,255,0.2);">❌ Cancel</button>
+            <span>Send to:</span>
+            <div class="quick-tags" id="bulk-tags" style="flex-wrap: wrap; gap: 0.4rem; max-width: 70%;">
+                <!-- Быстрые теги для массового применения -->
+            </div>
+            <button id="btn-apply-bulk" class="primary-btn small-btn" style="margin-left: 0.5rem;">Apply</button>
+        </div>
+    </div>
+
+    <script src="app_v51.js"></script>
+</body>
+</html>
