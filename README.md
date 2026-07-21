@@ -1,8 +1,8 @@
-# AI Mac Cleaner
+# AI File Cleaner (Cross-Platform)
 
-A ridiculously powerful, AI-driven tool for organizing thousands of messy files on your macOS.
+A ridiculously powerful, AI-driven tool for organizing thousands of messy files on macOS, Windows, and Linux.
 
-Unlike typical rule-based cleaners (like Hazel) that rely on extensions or basic rules, **AI Mac Cleaner** uses Large Language Models (LLMs) to semantically analyze the actual content, context, and purpose of every single file, and suggests the perfect destination folder for it.
+Unlike typical rule-based cleaners that rely on extensions or basic rules, **AI File Cleaner** uses Large Language Models (LLMs) to semantically analyze the actual content, context, and purpose of every single file, and suggests the perfect destination folder for it.
 
 It comes with a beautiful, lightning-fast two-stage web dashboard for manual review, ensuring you remain in absolute control of your data.
 
@@ -19,7 +19,7 @@ It comes with a beautiful, lightning-fast two-stage web dashboard for manual rev
 
 ## 🛠 Prerequisites
 
-- macOS
+- macOS, Windows, or Linux
 - Python 3.9+
 - A modern browser (Safari, Chrome, Arc)
 
@@ -42,7 +42,7 @@ Open your browser and navigate to `http://localhost:8000`.
 ### 3. Review & Sort
 - Use the web interface to quickly review the AI's predictions.
 - Tag files, create custom destination paths on the fly, or move entire folders.
-- Use the **Search Bar** to instantly find any file across your entire Mac.
+- Use the **Search Bar** to instantly find any file across your entire system.
 - Click **Export** when you are satisfied with the sorting. This will download an `export_tasks.json` file to your Downloads folder.
 
 ### 4. Execute the Cleanup
