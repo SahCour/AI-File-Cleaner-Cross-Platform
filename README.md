@@ -6,15 +6,14 @@ Unlike typical rule-based cleaners that rely on extensions or basic rules, **AI 
 
 It comes with a beautiful, lightning-fast two-stage web dashboard for manual review, ensuring you remain in absolute control of your data.
 
-## 🚀 Features
+## 🎯 Why AI File Cleaner? (Core USPs)
 
-- **Semantic AI Sorting:** Groups invoices with invoices, designs with designs, and projects with projects based on semantic meaning, not just file extensions.
-- **Two-Stage Review Dashboard:** 
-  - **Stage 1 (By Source):** Review the AI's initial sorting predictions.
-  - **Stage 2 (By Destination):** Review the final target folders before any file is moved.
-- **Lightning Fast UI:** Handles 5000+ files instantly in the browser without lag.
-- **Safety First:** Automatically skips system files, app data, `.git` repos, and hidden folders to prevent breaking your OS.
-- **Non-Destructive:** Files marked as "Delete" are not wiped; they are safely moved to a quarantine folder for manual inspection.
+- **Two-Stage Web Dashboard (Unique):** Unlike any other tool on the market, we offer a two-stage review process. 
+  - **Stage 1 (By Source):** Review the AI's initial sorting predictions grouped by their original locations.
+  - **Stage 2 (By Destination):** Review the final target folders before a single byte is moved. Absolute control.
+- **Quarantine System:** Files marked as "Delete" are **never** wiped. They are safely moved to a dedicated `_Quarantine` folder for your manual inspection. Safety is our philosophy.
+- **Lightning Fast Web UI:** Effortlessly handles 5000+ files instantly in the browser without lag. No heavy desktop clients needed for the review process.
+- **Semantic AI Sorting:** Groups invoices with invoices, designs with designs, and projects with projects based on semantic meaning of the file's content, not just simple file extensions.
 - **Local Execution:** Your files are processed securely. The dashboard runs locally on your machine.
 
 ## 🛠 Prerequisites
