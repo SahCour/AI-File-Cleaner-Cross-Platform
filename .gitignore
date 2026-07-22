@@ -21,3 +21,7 @@ destinations.json
 
 # Node (if used later)
 node_modules/
+
+# Commercial Desktop App (Keep Private)
+desktop-app/
+

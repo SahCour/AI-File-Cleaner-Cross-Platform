@@ -1,0 +1,29 @@
+{
+  "Documents": [
+    "~/Documents/Documents"
+  ],
+  "Images": [
+    "~/Documents/Images"
+  ],
+  "Videos": [
+    "~/Documents/Videos"
+  ],
+  "Music": [
+    "~/Documents/Music"
+  ],
+  "Archives": [
+    "~/Documents/Archives"
+  ],
+  "Code": [
+    "~/Documents/Code"
+  ],
+  "Data": [
+    "~/Documents/Data"
+  ],
+  "Apps": [
+    "~/Documents/Apps"
+  ],
+  "Other": [
+    "~/Documents/Other"
+  ]
+}
