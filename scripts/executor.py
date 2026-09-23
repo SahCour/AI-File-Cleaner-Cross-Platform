@@ -75,7 +75,7 @@ def main():
             # Handle naming collisions
             if os.path.exists(dest_path):
                 name, ext = os.path.splitext(filename)
-                timestamp = datetime.now().strftime("%Y%md%H%M%S")
+                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
                 dest_path = os.path.join(target_dir, f"{name}_{timestamp}{ext}")
                 
             try:

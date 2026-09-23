@@ -8,6 +8,29 @@ import os
 PORT = 8002
 DIRECTORY = ".."
 
+# Cache of allowed paths for /api/open (rebuilt when files_to_process.json changes)
+_ALLOWED_CACHE = {}
+
+def _allowed_paths():
+    list_path = os.path.join(DIRECTORY, 'files_to_process.json')
+    mtime = os.path.getmtime(list_path) if os.path.exists(list_path) else None
+    cached = _ALLOWED_CACHE.get('data')
+    if cached is not None and _ALLOWED_CACHE.get('mtime') == mtime:
+        return cached
+    allowed = set()
+    if mtime is not None:
+        try:
+            with open(list_path, 'r', encoding='utf-8') as f:
+                import json
+                for item in json.load(f):
+                    if item.get('path'):
+                        allowed.add(item['path'])
+        except (OSError, ValueError):
+            allowed = set()
+    _ALLOWED_CACHE['data'] = allowed
+    _ALLOWED_CACHE['mtime'] = mtime
+    return allowed
+
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
@@ -98,6 +121,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 import subprocess
                 import os
                 try:
+                    # Whitelist: only allow paths listed in files_to_process.json
+                    if file_path not in _allowed_paths():
+                        self.send_response(403)
+                        self.send_header('Content-type', 'application/json')
+                        self.end_headers()
+                        self.wfile.write(b'{"error": "forbidden"}')
+                        return
+
                     sys_name = platform.system()
                     if sys_name == 'Darwin':
                         subprocess.run(['open', file_path])
@@ -125,6 +156,15 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         parsed = urllib.parse.urlparse(self.path)
         if parsed.path == '/api/save_destinations':
+            # CSRF guard: only allow requests from the local browser page
+            host = self.headers.get('Host', '')
+            if not (host.startswith('localhost:') or host.startswith('127.0.0.1:')):
+                self.send_response(403)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                self.wfile.write(b'{"error": "forbidden"}')
+                return
+
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
             
@@ -151,9 +191,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 if __name__ == '__main__':
     while True:
         try:
-            with socketserver.TCPServer(("", PORT), Handler) as httpd:
+            with socketserver.TCPServer(("127.0.0.1", PORT), Handler) as httpd:
                 print(f"==================================================")
-                print(f"🚀 Mac Cleaner Native Server running!")
+                print(f"🚀 AI File Cleaner Native Server running!")
                 print(f"👉 Open in your browser: http://localhost:{PORT}")
                 print(f"==================================================")
                 print("Press Ctrl+C to stop.")

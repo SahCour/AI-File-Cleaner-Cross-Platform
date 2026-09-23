@@ -15,6 +15,7 @@ pre_scan.py — Предварительное сканирование файл
 
 import json
 import os
+import platform
 import re
 import subprocess
 import unicodedata
@@ -241,6 +242,11 @@ def find_aliases(target_paths):
 # ============================================================================
 
 def main():
+    if platform.system() != 'Darwin':
+        print("⚠️  Warning: not running on macOS — some protective checks "
+              "(lsof locks, mdfind aliases, iCloud stubs) are not available "
+              "on this OS and will be skipped.")
+
     print("🔍 Loading files...")
     with open(INPUT_FILE, 'r', encoding='utf-8') as f:
         files = json.load(f)

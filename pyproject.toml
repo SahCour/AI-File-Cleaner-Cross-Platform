@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-file-cleaner"
+version = "0.2.0"
+description = "AI File Cleaner: движок карантина и перемещения файлов по JSON-задачам (executor + rollback), Web App, пре-скан и экспорт."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "AI File Cleaner contributors" },
+]
+keywords = ["files", "cleaner", "quarantine", "file-management"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Filesystems",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/SahCour/AI-File-Cleaner-Cross-Platform"
+
+[tool.setuptools]
+# Только стандартная библиотека; ничего упаковывать не нужно.
+packages = []
