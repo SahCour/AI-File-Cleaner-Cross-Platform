@@ -1,63 +1,89 @@
-# AI File Cleaner (Cross-Platform)
+<div align="center">
 
-A ridiculously powerful, AI-driven tool for organizing thousands of messy files on macOS, Windows, and Linux.
+# 🧹 AI File Cleaner
 
-Unlike typical rule-based cleaners that rely on extensions or basic rules, **AI File Cleaner** uses Large Language Models (LLMs) to semantically analyze the actual content, context, and purpose of every single file, and suggests the perfect destination folder for it.
+**AI-driven file organization for macOS, Windows & Linux — review first, move second.**
 
-It comes with a beautiful, lightning-fast two-stage web dashboard for manual review, ensuring you remain in absolute control of your data.
+[![CI](https://github.com/SahCour/AI-File-Cleaner-Cross-Platform/actions/workflows/ci.yml/badge.svg)](https://github.com/SahCour/AI-File-Cleaner-Cross-Platform/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3.9%20%7C%203.11%20%7C%203.12-3776AB)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-## 🎯 Why AI File Cleaner? (Core USPs)
+</div>
 
-- **Two-Stage Web Dashboard (Unique):** Unlike any other tool on the market, we offer a two-stage review process. 
-  - **Stage 1 (By Source):** Review the AI's initial sorting predictions grouped by their original locations.
-  - **Stage 2 (By Destination):** Review the final target folders before a single byte is moved. Absolute control.
-- **Quarantine System:** Files marked as "Delete" are **never** wiped. They are safely moved to a dedicated `_Quarantine` folder for your manual inspection. Safety is our philosophy.
-- **Lightning Fast Web UI:** Effortlessly handles 5000+ files instantly in the browser without lag. No heavy desktop clients needed for the review process.
-- **Semantic AI Sorting:** Groups invoices with invoices, designs with designs, and projects with projects based on semantic meaning of the file's content, not just simple file extensions.
-- **Local Execution:** Your files are processed securely. The dashboard runs locally on your machine.
+A ridiculously powerful tool for organizing thousands of messy files. Instead of rule-based sorting by extension, **AI File Cleaner** uses LLMs to semantically understand what every file *is* — an invoice, a design, a podcast episode — and proposes the perfect destination folder. You review everything in a two-stage web dashboard before a single byte moves.
+
+## 📸 Screenshots
+
+| Stage 1: Review by Source | Stage 2: Review by Destination |
+|---|---|
+| ![Stage 1: review AI predictions grouped by original location](docs/screenshots/stage1-by-source.png) | ![Stage 2: review final destination folders](docs/screenshots/stage2-by-destination.png) |
+
+## 🎯 Why AI File Cleaner?
+
+- **Two-Stage Review (unique).** Stage 1 shows the AI's sorting predictions grouped by where files came from; Stage 2 shows the final target folders. You approve at both stages — nothing moves without you.
+- **Semantic, not rule-based.** Files are understood by content and purpose, so `invoice_2026.pdf`, `pitch_deck_final.key` and `IMG_8402.jpg` land where they belong — no brittle extension rules.
+- **AI descriptions.** Every file gets a human-readable one-line summary, so you can spot junk instantly.
+- **Quarantine, not deletion.** Files marked for deletion are moved to a `_Quarantine` folder for manual inspection — never wiped.
+- **Lightning-fast web UI.** Handles 5000+ files in the browser without lag. No heavy desktop client needed for review.
+- **Fully local.** Files are processed on your machine; the dashboard runs on `127.0.0.1`.
+- **Cross-platform.** macOS, Windows and Linux — with platform-aware protections (file locks, aliases, iCloud stubs) on macOS.
+
+## 🔒 Security & Safety
+
+- **Local-only server.** The dashboard binds to `127.0.0.1`, not your LAN.
+- **No unapproved moves.** The executor only processes tasks you explicitly export.
+- **Open-whitelist.** `/api/open` can only reveal files that are actually in the scan manifest.
+- **CSRF guard.** State-changing endpoints validate the `Host` header.
+- **Collision handling.** Name clashes get automatic suffixes (`_1`, `_2`) — nothing is silently overwritten.
+- **Rollback.** A full move log lets you undo an entire cleanup run if needed.
 
 ## 🛠 Prerequisites
 
-- macOS, Windows, or Linux
-- Python 3.9+
-- A modern browser (Safari, Chrome, Arc)
+- Python 3.9+ (only the standard library — zero dependencies)
+- A modern browser (Chrome, Safari, Firefox, Arc)
+- An LLM API key for the description/scoring scripts (see `scripts/generate_descriptions.py`)
 
 ## 📦 Installation & Usage
 
-### 1. Initial Scan
-Run the scanner to index your cluttered folders (e.g., `~/Downloads`, `~/Desktop`, `~/Documents`).
 ```bash
-python3 scripts/scan_files.py
-```
-*Note: This will generate `files_to_process.json`.*
+# 1. Index your cluttered folders
+python3 scripts/scan_files.py            # → files_to_process.json
 
-### 2. Launch the Dashboard
-Start the local server to review the AI's sorting plan.
-```bash
-python3 webapp/server.py
-```
-Open your browser and navigate to `http://localhost:8000`.
+# 2. Generate AI descriptions (optional but recommended)
+python3 scripts/generate_descriptions.py  # → enriches the manifest
 
-### 3. Review & Sort
-- Use the web interface to quickly review the AI's predictions.
-- Tag files, create custom destination paths on the fly, or move entire folders.
-- Use the **Search Bar** to instantly find any file across your entire system.
-- Click **Export** when you are satisfied with the sorting. This will download an `export_tasks.json` file to your Downloads folder.
+# 3. Launch the review dashboard
+python3 webapp/server.py                  # → http://localhost:8002
 
-### 4. Execute the Cleanup
-Finally, let the script safely move the files to their new homes.
-```bash
-python3 scripts/executor.py
+# 4. Review in Stage 1 → Stage 2 → Export
+#    Export writes export_tasks.json to your Downloads folder
+
+# 5. Execute the approved moves
+python3 scripts/executor.py               # safely moves everything
+
+# 6. Changed your mind? Roll everything back
+python3 rollback.py
 ```
 
-## 🔒 Privacy & Safety
-- **No unapproved moves:** The script only moves files you explicitly approve via the Export button.
-- **Collision handling:** If a file with the same name exists in the destination, the tool automatically adds a suffix (`_1`, `_2`) to prevent overwriting.
+## 🧪 Tests
+
+12 unit tests covering the executor and rollback engine (`tests/`), run on every push via GitHub Actions against Python 3.9 / 3.11 / 3.12:
+
+```bash
+python -m unittest discover -s tests -v
+```
 
 ## 🗺 Roadmap
-- [ ] Packaging into a native `.dmg` app (Tauri / Electron).
-- [ ] Built-in file tree browser for easier custom folder selection.
-- [ ] Integration with local LLMs (Ollama) for 100% offline, private scanning.
+
+- [ ] Native `.dmg` / installer packaging (Tauri / Electron)
+- [ ] Built-in file tree browser for custom folder selection
+- [ ] Local-LLM integration (Ollama) for 100% offline, private scanning
+- [ ] Diff preview of the full move plan before execution
+- [ ] Undo history persisted across sessions
+
+## 📄 License
+
+[MIT](LICENSE)
 
 ---
-*Built to bring order to the chaos.*
+*Built to bring order to the chaos. Review first, move second.*
